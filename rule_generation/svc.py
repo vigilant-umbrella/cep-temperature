@@ -33,8 +33,9 @@ def main():
     tbl = tbl.drop_columns(tbl.id, tbl.room_id, tbl.noted_date)
 
 
-    X = tbl.select(tbl.temp).to_pandas()
-    y = tbl.select(tbl.result).to_pandas()
+    df = tbl.select(tbl.temp, tbl.result).to_pandas()
+    X = df['temp'].to_numpy().reshape(-1, 1)
+    y = df['result'].to_numpy()
 
     model = LinearSVC(random_state=42, class_weight='balanced', dual=False)
 
@@ -46,7 +47,7 @@ def main():
 
 
     s = model.score(X, y)
-    print(f'Accuracy: {s}')
+    print(f'Accuracy: {s*100}%')
 
     print(f'Precision, recall, fscore, support = {precision_recall_fscore_support(y, model.predict(X), average="macro")}')
     
